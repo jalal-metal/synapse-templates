@@ -35,3 +35,14 @@
     {%- endfor %}
     {%- endif %}
 </table>
+
+<div style="display: none;">
+    <h3>Debug Room Object</h3>
+    <pre>{{ room }}</pre>
+    <pre>{{ room.__dict__ }}</pre>
+    <ul>
+        {% for key in room %}
+        <li>{{ key }}: {{ room[key] }}</li>
+        {% endfor %}
+    </ul>
+</div>
