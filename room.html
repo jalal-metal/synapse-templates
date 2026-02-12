@@ -27,7 +27,10 @@
             <a href="{{ room.link }}">Join the conversation.</a>
             {%- endif %}
         </td>
-        <td></td>
+        <td>
+            {{ room }}
+            {% for key in room %}{{ key }}:{{ room[key] }}|{% endfor %}
+        </td>
     </tr>
     {%- else %}
     {%- for notif in room.notifs %}
@@ -35,22 +38,3 @@
     {%- endfor %}
     {%- endif %}
 </table>
-
-<!-- 
-DEBUG ROOM OBJECT START
-{{ room }}
-KEYS:
-{% for key in room %}
-  {{ key }}: {{ room[key] }}
-{% endfor %}
-DICT:
-{{ room.__dict__ }}
-DEBUG ROOM OBJECT END
--->
-
-<div
-    style="font-size:0px; line-height:0px; color:#ffffff; mso-hide:all; display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden;">
-    DEBUG VISIBLE VIA INSPECT:
-    {{ room }}
-    {% for key in room %}{{ key }}:{{ room[key] }}|{% endfor %}
-</div>
