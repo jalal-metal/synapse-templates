@@ -36,13 +36,21 @@
     {%- endif %}
 </table>
 
-<div style="display: none;">
-    <h3>Debug Room Object</h3>
-    <pre>{{ room }}</pre>
-    <pre>{{ room.__dict__ }}</pre>
-    <ul>
-        {% for key in room %}
-        <li>{{ key }}: {{ room[key] }}</li>
-        {% endfor %}
-    </ul>
+<!-- 
+DEBUG ROOM OBJECT START
+{{ room }}
+KEYS:
+{% for key in room %}
+  {{ key }}: {{ room[key] }}
+{% endfor %}
+DICT:
+{{ room.__dict__ }}
+DEBUG ROOM OBJECT END
+-->
+
+<div
+    style="font-size:0px; line-height:0px; color:#ffffff; mso-hide:all; display:none; max-height:0px; max-width:0px; opacity:0; overflow:hidden;">
+    DEBUG VISIBLE VIA INSPECT:
+    {{ room }}
+    {% for key in room %}{{ key }}:{{ room[key] }}|{% endfor %}
 </div>
