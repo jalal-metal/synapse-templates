@@ -21,12 +21,13 @@
     <tr>
         <td></td>
         <td>
-            <a href="{{ room.link }}">Join the conversation</a>
+            {%- if room.canonical_alias %}
+            <a href="https://connect.metal.men/#/room/{{ room.canonical_alias }}">Join the conversation.</a>
+            {%- else %}
+            <a href="{{ room.link }}">Join the conversation.</a>
+            {%- endif %}
         </td>
-        <td>
-            {{ room }}
-            {% for key in room %}{{ key }}:{{ room[key] }}|{% endfor %}
-        </td>
+        <td></td>
     </tr>
     {%- else %}
     {%- for notif in room.notifs %}
