@@ -1,11 +1,12 @@
 {#- Older "historical" context messages are skipped; only the new unread messages are shown.
     No avatars (media URLs need auth, so they never load in mail clients) and no times
     (Synapse can only format in server time, which is UTC). -#}
-{%- for message in notif.messages %}
-{%- if not message.is_historical %}
+{%- for message in notif.messages if not message.is_historical %}
     <tr class="message">
         <td class="message_contents">
-            {%- if message.sender_name != room.title and (loop.index0 == 0 or notif.messages[loop.index0 - 1].sender_name != message.sender_name) %}
+            {#- Filtering in the loop header makes loop.previtem the previous *shown* message,
+                so a hidden historical message never suppresses the next sender's name. #}
+            {%- if message.sender_name != room.title and (loop.first or loop.previtem.sender_name != message.sender_name) %}
                 <div class="sender_name">{%- if message.msgtype == "m.emote" %}* {%- endif %}{{ message.sender_name }}</div>
             {%- endif %}
             <div class="message_body">
@@ -25,7 +26,6 @@
             </div>
         </td>
     </tr>
-{%- endif %}
 {%- endfor %}
 <tr class="notif_link">
     <td>
