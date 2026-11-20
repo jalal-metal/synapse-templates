@@ -1,51 +1,34 @@
+{#- Older "historical" context messages are skipped; only the new unread messages are shown.
+    No avatars (media URLs need auth, so they never load in mail clients) and no times
+    (Synapse can only format in server time, which is UTC). -#}
 {%- for message in notif.messages %}
-    <tr class="{{ "historical_message" if message.is_historical else "message" }}">
-        <td class="sender_avatar">
-            {%- if loop.index0 == 0 or notif.messages[loop.index0 - 1].sender_name != notif.messages[loop.index0].sender_name %}
-                {%- if message.sender_avatar_url %}
-                    <img alt="" class="sender_avatar" src="{{ message.sender_avatar_url|mxc_to_http(32,32) }}"  />
-                {%- else %}
-                    {%- if message.sender_hash % 3 == 0 %}
-                        <img class="sender_avatar" src="https://riot.im/img/external/avatar-1.png"  />
-                    {%- elif message.sender_hash % 3 == 1 %}
-                        <img class="sender_avatar" src="https://riot.im/img/external/avatar-2.png"  />
-                    {%- else %}
-                        <img class="sender_avatar" src="https://riot.im/img/external/avatar-3.png"  />
-                    {%- endif %}
-                {%- endif %}
-            {%- endif %}
-        </td>
+{%- if not message.is_historical %}
+    <tr class="message">
         <td class="message_contents">
-            {%- if loop.index0 == 0 or notif.messages[loop.index0 - 1].sender_name != notif.messages[loop.index0].sender_name %}
-                <div class="sender_name">{%- if message.msgtype == "m.emote" %}*{%- endif %} {{ message.sender_name }}</div>
+            {%- if message.sender_name != room.title and (loop.index0 == 0 or notif.messages[loop.index0 - 1].sender_name != message.sender_name) %}
+                <div class="sender_name">{%- if message.msgtype == "m.emote" %}* {%- endif %}{{ message.sender_name }}</div>
             {%- endif %}
             <div class="message_body">
                 {%- if message.event_type == "m.room.encrypted" %}
                     An encrypted message.
                 {%- elif message.event_type == "m.room.message" %}
-                    {%- if message.msgtype == "m.text" %}
+                    {%- if message.msgtype == "m.text" or message.msgtype == "m.emote" or message.msgtype == "m.notice" %}
                         {{ message.body_text_html }}
-                    {%- elif message.msgtype == "m.emote" %}
-                        {{ message.body_text_html }}
-                    {%- elif message.msgtype == "m.notice" %}
-                        {{ message.body_text_html }}
-                    {%- elif message.msgtype == "m.image" and message.image_url %}
-                        <img src="{{ message.image_url|mxc_to_http(640, 480, 'scale') }}" />
+                    {%- elif message.msgtype == "m.image" %}
+                        [Image]
                     {%- elif message.msgtype == "m.file" %}
-                        <span class="filename">{{ message.body_text_plain }}</span>
+                        <span class="filename">[File] {{ message.body_text_plain }}</span>
                     {%- else %}
                         A message with unrecognised content.
                     {%- endif %}
                 {%- endif %}
             </div>
         </td>
-        <td class="message_time">{{ message.ts|format_ts("%H:%M") }}</td>
     </tr>
+{%- endif %}
 {%- endfor %}
 <tr class="notif_link">
-    <td></td>
     <td>
-        <a href="{{ notif.link }}">View {{ room.title }}</a>
+        <a class="button" href="{{ notif.link }}">Open in METAL Connect</a>
     </td>
-    <td></td>
 </tr>
